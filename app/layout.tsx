@@ -1,6 +1,10 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import SecurityGuard from '@/components/SecurityGuard';
+
+export const viewport: Viewport = {
+  themeColor: '#0d0414',
+};
 
 export const metadata: Metadata = {
   title: 'A Romantic Proposal Site',
@@ -27,7 +31,6 @@ export const metadata: Metadata = {
     description: 'A personalized luxury romantic proposal experience.',
     images: ['https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80'],
   },
-  themeColor: '#0d0414',
   manifest: '/manifest.webmanifest',
 };
 
