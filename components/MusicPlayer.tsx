@@ -5,29 +5,29 @@ import { Play, Pause, SkipForward, Music } from 'lucide-react';
 
 export const PLAYLIST = [
   {
+    title: 'Pehli Dafa (Karaoke)',
+    artist: 'Atif Aslam',
+    src: '/audio/Pehli Dafa  Atif Aslam (Karaoke Version).mp3',
+  },
+  {
     title: 'Pehli Dafa (Original)',
     artist: 'Atif Aslam',
-    src: '/Atif Aslam Pehli Dafa Song (Video)  Ileana DCruz  Latest Hindi Song 2017  T-Series.mp3',
+    src: '/audio/Atif Aslam Pehli Dafa Song (Video)  Ileana DCruz  Latest Hindi Song 2017  T-Series.mp3',
   },
   {
     title: 'Jeene Laga Hoon',
     artist: 'Atif Aslam & Shreya Ghoshal',
-    src: '/Jeene Laga Hoon Lyrical - Ramaiya VastavaiyaGirish Kumar, Shruti Haasan Atif Aslam, Shreya Ghoshal.mp3',
+    src: '/audio/Jeene Laga Hoon Lyrical - Ramaiya VastavaiyaGirish Kumar, Shruti Haasan Atif Aslam, Shreya Ghoshal.mp3',
   },
   {
     title: 'Aarzu',
     artist: 'Asim Azhar & Noor',
-    src: '/Aarzu (with Asim Azhar) Official Music Video  Asim Azhar, Noor, Khan, Madhurxo.mp3',
+    src: '/audio/Aarzu (with Asim Azhar) Official Music Video  Asim Azhar, Noor, Khan, Madhurxo.mp3',
   },
   {
     title: 'Aaj Se Teri',
     artist: 'Arijit Singh',
-    src: '/Aaj Se Teri - Lyrical  Padman  Akshay Kumar & Radhika Apte  Arijit Singh  Amit Trivedi.mp3',
-  },
-  {
-    title: 'Pehli Dafa (Karaoke)',
-    artist: 'Atif Aslam',
-    src: '/Pehli Dafa  Atif Aslam (Karaoke Version).mp3',
+    src: '/audio/Aaj Se Teri - Lyrical  Padman  Akshay Kumar & Radhika Apte  Arijit Singh  Amit Trivedi.mp3',
   },
 ];
 
