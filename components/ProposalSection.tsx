@@ -189,7 +189,7 @@ export default function ProposalSection({ question, subtext, recipientName, prop
           <span className="inline-flex items-center text-2xl sm:text-5xl text-rose-300 font-sans leading-none drop-shadow-[0_4px_12px_rgba(255,112,166,0.8)]">🥺👉👈💖</span>
         </h2>
 
-        <p className="text-amber-200/95 font-handwritten text-2xl sm:text-4xl max-w-3xl mx-auto leading-relaxed px-2 drop-shadow-lg pt-1">
+        <p className="text-rose-100/90 text-lg sm:text-2xl lg:text-3xl font-light italic max-w-3xl mx-auto leading-relaxed px-2 py-3 drop-shadow-md">
           {subtext || `"Sachi sachi batao, kitna pyaar karti ho ${recipientName} mujhse?"`}
         </p>
 

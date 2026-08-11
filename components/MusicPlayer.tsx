@@ -116,17 +116,7 @@ export default function MusicPlayer() {
         preload="auto"
       />
 
-      <div className="fixed bottom-6 left-6 z-50 flex flex-col items-start gap-2">
-        {!isPlaying && (
-          <button
-            onClick={togglePlay}
-            className="animate-bounce bg-gradient-to-r from-rose-600 via-pink-600 to-amber-500 text-white text-[11px] font-bold px-3.5 py-1.5 rounded-full shadow-2xl border border-amber-300 flex items-center gap-1.5 cursor-pointer"
-          >
-            <Music className="w-3.5 h-3.5 animate-spin" /> Tap to Play Music! 🎵✨
-          </button>
-        )}
-
-        <div className="flex items-center gap-3 bg-black/80 backdrop-blur-xl border border-rose-500/40 p-2.5 rounded-full shadow-2xl">
+      <div className="fixed bottom-6 left-6 z-50 flex items-center gap-3 bg-black/80 backdrop-blur-xl border border-rose-500/40 p-2.5 rounded-full shadow-2xl">
           <button
             onClick={togglePlay}
             className="p-3 rounded-full bg-gradient-to-tr from-rose-600 to-amber-500 text-white hover:scale-105 transition-transform shadow-lg cursor-pointer"
@@ -151,7 +141,6 @@ export default function MusicPlayer() {
             <p className="text-[10px] text-rose-300/70 truncate">{track.artist}</p>
           </div>
         </div>
-      </div>
-    </>
+      </>
   );
 }
