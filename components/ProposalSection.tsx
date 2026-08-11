@@ -79,32 +79,7 @@ export default function ProposalSection({ question, subtext, recipientName, prop
     });
   }, []);
 
-  // Proximity Detection: Evade button when cursor comes within 100px radius
-  useEffect(() => {
-    const handlePointerMove = (e: MouseEvent | TouchEvent) => {
-      if (!noBtnRef.current) return;
-      const rect = noBtnRef.current.getBoundingClientRect();
-      const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
-      const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
 
-      const btnCenterX = rect.left + rect.width / 2;
-      const btnCenterY = rect.top + rect.height / 2;
-
-      const distance = Math.hypot(clientX - btnCenterX, clientY - btnCenterY);
-
-      if (distance < 100) {
-        handleNoHover();
-      }
-    };
-
-    window.addEventListener('mousemove', handlePointerMove);
-    window.addEventListener('touchmove', handlePointerMove);
-
-    return () => {
-      window.removeEventListener('mousemove', handlePointerMove);
-      window.removeEventListener('touchmove', handlePointerMove);
-    };
-  }, [handleNoHover]);
 
   const handleYesClick = () => {
     setSheSaidYes(true);
