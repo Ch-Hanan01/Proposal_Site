@@ -81,18 +81,24 @@ ${proposerName} ❤️`;
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="w-full max-w-2xl bg-amber-50 text-zinc-900 border-4 border-amber-300/70 rounded-3xl p-8 sm:p-14 shadow-2xl relative overflow-hidden"
+              style={{
+                backgroundImage: "url('/images/images.jpg')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+              }}
+              className="w-full max-w-2xl text-amber-950 border-4 border-amber-400/80 rounded-3xl p-8 sm:p-14 shadow-2xl relative overflow-hidden bg-amber-50/80 bg-blend-overlay"
             >
               <button
                 onClick={() => setIsOpen(false)}
-                className="absolute top-4 right-4 px-4 py-1.5 rounded-full bg-amber-900/10 text-amber-950 hover:bg-amber-900/20 text-xs font-bold transition-colors"
+                className="absolute top-4 right-4 px-4 py-1.5 rounded-full bg-amber-950/20 text-amber-950 hover:bg-amber-950/30 text-xs font-bold transition-colors z-10 backdrop-blur-sm cursor-pointer"
               >
                 Close Envelope ✉️
               </button>
 
               <div
                 style={{ fontFamily: "'Lucy Said Ok', 'Caveat', 'Satisfy', 'Sacramento', 'Dancing Script', cursive" }}
-                className="text-3xl sm:text-5xl text-amber-950 leading-relaxed whitespace-pre-line pt-6 drop-shadow-sm font-normal"
+                className="text-3xl sm:text-5xl text-amber-950 leading-relaxed whitespace-pre-line pt-6 drop-shadow-md font-normal relative z-10"
               >
                 {textToDisplay}
               </div>
