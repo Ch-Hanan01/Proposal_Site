@@ -82,7 +82,7 @@ export default function PhotoSlider() {
         onMouseLeave={() => setIsPaused(false)}
         className="relative bg-gradient-to-b from-black/80 via-deepRose/90 to-black/90 border-2 border-rose-500/40 rounded-3xl p-4 sm:p-8 shadow-[0_20px_50px_rgba(224,169,109,0.15)] backdrop-blur-2xl overflow-hidden group"
       >
-        <div className="relative h-[380px] sm:h-[480px] w-full rounded-2xl overflow-hidden bg-black/80 shadow-2xl">
+        <div className="relative h-[280px] sm:h-[480px] w-full rounded-2xl overflow-hidden bg-black/80 shadow-2xl">
           <AnimatePresence mode="wait">
             <motion.img
               key={currentPhoto.id}
@@ -97,7 +97,7 @@ export default function PhotoSlider() {
           </AnimatePresence>
 
           {/* Ambient Gradient Overlay for Caption */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent flex flex-col justify-end p-6 sm:p-10">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent flex flex-col justify-end p-4 sm:p-10">
             <motion.div
               key={`text-${currentPhoto.id}`}
               initial={{ opacity: 0, y: 20 }}

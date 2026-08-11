@@ -7,27 +7,27 @@ export const PLAYLIST = [
   {
     title: 'Pehli Dafa (Karaoke)',
     artist: 'Atif Aslam',
-    src: '/audio/Pehli Dafa  Atif Aslam (Karaoke Version).mp3',
+    src: '/audio/pehli_dafa_karaoke.mp3',
   },
   {
     title: 'Pehli Dafa (Original)',
     artist: 'Atif Aslam',
-    src: '/audio/Atif Aslam Pehli Dafa Song (Video)  Ileana DCruz  Latest Hindi Song 2017  T-Series.mp3',
+    src: '/audio/pehli_dafa_original.mp3',
   },
   {
     title: 'Jeene Laga Hoon',
     artist: 'Atif Aslam & Shreya Ghoshal',
-    src: '/audio/Jeene Laga Hoon Lyrical - Ramaiya VastavaiyaGirish Kumar, Shruti Haasan Atif Aslam, Shreya Ghoshal.mp3',
+    src: '/audio/jeene_laga_hoon.mp3',
   },
   {
     title: 'Aarzu',
     artist: 'Asim Azhar & Noor',
-    src: '/audio/Aarzu (with Asim Azhar) Official Music Video  Asim Azhar, Noor, Khan, Madhurxo.mp3',
+    src: '/audio/aarzu.mp3',
   },
   {
     title: 'Aaj Se Teri',
     artist: 'Arijit Singh',
-    src: '/audio/Aaj Se Teri - Lyrical  Padman  Akshay Kumar & Radhika Apte  Arijit Singh  Amit Trivedi.mp3',
+    src: '/audio/aaj_se_teri.mp3',
   },
 ];
 
@@ -40,7 +40,6 @@ export default function MusicPlayer() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    // Set background audio volume to 45% (0.45)
     audio.volume = 0.45;
 
     const playAudio = () => {
@@ -59,14 +58,20 @@ export default function MusicPlayer() {
       }
       window.removeEventListener('click', handleFirstInteraction);
       window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('touchend', handleFirstInteraction);
+      window.removeEventListener('scroll', handleFirstInteraction);
     };
 
     window.addEventListener('click', handleFirstInteraction);
     window.addEventListener('touchstart', handleFirstInteraction);
+    window.addEventListener('touchend', handleFirstInteraction);
+    window.addEventListener('scroll', handleFirstInteraction);
 
     return () => {
       window.removeEventListener('click', handleFirstInteraction);
       window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('touchend', handleFirstInteraction);
+      window.removeEventListener('scroll', handleFirstInteraction);
     };
   }, [currentTrack]);
 
