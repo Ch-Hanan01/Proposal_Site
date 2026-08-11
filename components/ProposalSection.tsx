@@ -60,8 +60,8 @@ export default function ProposalSection({ question, subtext, recipientName, prop
 
   const handleNoHover = useCallback(() => {
     const now = Date.now();
-    // Throttle evasion to once every 600ms to prevent double text switching!
-    if (now - lastEvadeTime.current < 600) return;
+    // Throttle evasion to once every 200ms for fast responsive dodging without double text glitch!
+    if (now - lastEvadeTime.current < 200) return;
     lastEvadeTime.current = now;
 
     const side = Math.random() > 0.5 ? 1 : -1;
@@ -79,38 +79,65 @@ export default function ProposalSection({ question, subtext, recipientName, prop
     });
   }, []);
 
+  // Precise Edge-Touch Proximity Detection: Evades as soon as cursor touches within 25px of button edge!
+  useEffect(() => {
+    const handlePointerMove = (e: MouseEvent | TouchEvent) => {
+      if (!noBtnRef.current) return;
+      const rect = noBtnRef.current.getBoundingClientRect();
+      const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
 
+      const dx = Math.max(rect.left - clientX, 0, clientX - rect.right);
+      const dy = Math.max(rect.top - clientY, 0, clientY - rect.bottom);
+      const distanceToEdge = Math.hypot(dx, dy);
+
+      if (distanceToEdge < 25) {
+        handleNoHover();
+      }
+    };
+
+    window.addEventListener('mousemove', handlePointerMove, { passive: true });
+    window.addEventListener('touchmove', handlePointerMove, { passive: true });
+
+    return () => {
+      window.removeEventListener('mousemove', handlePointerMove);
+      window.removeEventListener('touchmove', handlePointerMove);
+    };
+  }, [handleNoHover]);
 
   const handleYesClick = () => {
     setSheSaidYes(true);
     setCurrentGif('/images/hug and kiss.gif');
 
-    const duration = 5 * 1000;
+    const duration = 6 * 1000;
     const animationEnd = Date.now() + duration;
-    const defaults = { startVelocity: 35, spread: 360, ticks: 60, zIndex: 100000 };
+    const defaults = { startVelocity: 45, spread: 360, ticks: 100, zIndex: 1000000 };
 
     function randomInRange(min: number, max: number) {
       return Math.random() * (max - min) + min;
     }
 
+    // Trigger initial massive burst over modal
+    confetti({ ...defaults, particleCount: 120, origin: { x: 0.5, y: 0.4 } });
+
     const interval: any = setInterval(function () {
       const timeLeft = animationEnd - Date.now();
       if (timeLeft <= 0) return clearInterval(interval);
 
-      const particleCount = 60 * (timeLeft / duration);
+      const particleCount = 70 * (timeLeft / duration);
       confetti({
         ...defaults,
         particleCount,
-        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-        colors: ['#e63946', '#e0a96d', '#f7e7ce', '#ff70a6'],
+        origin: { x: randomInRange(0.1, 0.4), y: Math.random() * 0.4 },
+        colors: ['#e63946', '#e0a96d', '#f7e7ce', '#ff70a6', '#ffd166'],
       });
       confetti({
         ...defaults,
         particleCount,
-        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-        colors: ['#e63946', '#e0a96d', '#f7e7ce', '#ff70a6'],
+        origin: { x: randomInRange(0.6, 0.9), y: Math.random() * 0.4 },
+        colors: ['#e63946', '#e0a96d', '#f7e7ce', '#ff70a6', '#ffd166'],
       });
-    }, 250);
+    }, 200);
   };
 
   return (
@@ -158,11 +185,11 @@ export default function ProposalSection({ question, subtext, recipientName, prop
             YES, I LOVE YOU! ❤️✨
           </motion.button>
 
-          {/* EVASIVE NO BUTTON WITH THROTTLED EVASION */}
+          {/* EVASIVE NO BUTTON WITH PRECISE EDGE EVASION */}
           <motion.button
             ref={noBtnRef}
             animate={{ x: noPos.x, y: noPos.y }}
-            transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 24 }}
             onMouseEnter={handleNoHover}
             onPointerDown={handleNoHover}
             onTouchStart={handleNoHover}
