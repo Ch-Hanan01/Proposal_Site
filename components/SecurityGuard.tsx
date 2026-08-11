@@ -56,21 +56,12 @@ export default function SecurityGuard() {
       console.debug = () => {};
     }
 
-    // 4. Anti-Debugging Detector Trap
-    const debuggerInterval = setInterval(() => {
-      (function () {
-        // eslint-disable-next-line no-debugger
-        debugger;
-      })();
-    }, 2000);
-
     window.addEventListener('contextmenu', handleContextMenu);
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       window.removeEventListener('contextmenu', handleContextMenu);
       window.removeEventListener('keydown', handleKeyDown);
-      clearInterval(debuggerInterval);
     };
   }, []);
 
