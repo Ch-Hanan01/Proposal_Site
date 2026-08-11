@@ -1,0 +1,236 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
+import { Heart, ChevronDown, Sparkles } from 'lucide-react';
+
+interface HeroSectionProps {
+  recipientName: string;
+  headline: string;
+  subheadline: string;
+}
+
+export default function HeroSection({ recipientName, headline, subheadline }: HeroSectionProps) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [typedName, setTypedName] = useState('');
+
+  // Typewriter effect for recipient name
+  useEffect(() => {
+    let index = 0;
+    const fullText = `For My Beloved, ${recipientName}`;
+    setTypedName('');
+    const timer = setInterval(() => {
+      if (index < fullText.length) {
+        setTypedName(fullText.substring(0, index + 1));
+        index++;
+      } else {
+        clearInterval(timer);
+      }
+    }, 90);
+    return () => clearInterval(timer);
+  }, [recipientName]);
+
+  // Starfield & Floating Hearts Canvas background
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+    window.addEventListener('resize', handleResize);
+
+    // Create stars
+    const starColors = ['255, 255, 255', '255, 223, 160', '255, 180, 220', '247, 231, 206'];
+    const starsCount = 350;
+    const stars = Array.from({ length: starsCount }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      radius: Math.random() * 1.8 + 0.4,
+      alpha: Math.random(),
+      speed: Math.random() * 0.025 + 0.008,
+      color: starColors[Math.floor(Math.random() * starColors.length)],
+      isSparkle: Math.random() < 0.22,
+      sparkleSize: Math.random() * 5 + 3,
+      driftY: Math.random() * 0.15 + 0.05,
+      driftX: (Math.random() - 0.5) * 0.1,
+    }));
+
+    // Floating subtle hearts
+    const hearts = Array.from({ length: 15 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height + height,
+      size: Math.random() * 12 + 8,
+      speed: Math.random() * 0.8 + 0.3,
+      opacity: Math.random() * 0.4 + 0.2,
+      drift: (Math.random() - 0.5) * 0.5,
+    }));
+
+    const drawSparkleStar = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number, alpha: number, color: string) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.strokeStyle = `rgba(${color}, ${alpha})`;
+      ctx.fillStyle = `rgba(${color}, ${alpha})`;
+      ctx.shadowColor = `rgba(${color}, 0.9)`;
+      ctx.shadowBlur = 10;
+      ctx.lineWidth = 1.2;
+
+      ctx.beginPath();
+      ctx.moveTo(-size, 0); ctx.lineTo(size, 0);
+      ctx.moveTo(0, -size); ctx.lineTo(0, size);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, size * 0.3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    };
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      // Render stars
+      stars.forEach(star => {
+        star.alpha += star.speed;
+        if (star.alpha > 1 || star.alpha < 0.15) star.speed = -star.speed;
+        const currentAlpha = Math.max(0, Math.min(1, star.alpha));
+
+        star.y -= star.driftY;
+        star.x += star.driftX;
+        if (star.y < -10) star.y = height + 10;
+        if (star.x < -10) star.x = width + 10;
+        if (star.x > width + 10) star.x = -10;
+
+        if (star.isSparkle && currentAlpha > 0.4) {
+          drawSparkleStar(ctx, star.x, star.y, star.sparkleSize * currentAlpha, currentAlpha, star.color);
+        } else {
+          ctx.save();
+          ctx.shadowColor = `rgba(${star.color}, 0.8)`;
+          ctx.shadowBlur = star.radius * 6;
+          ctx.fillStyle = `rgba(${star.color}, ${currentAlpha})`;
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      });
+
+      // Render floating hearts
+      hearts.forEach(heart => {
+        heart.y -= heart.speed;
+        heart.x += heart.drift;
+        if (heart.y < -30) {
+          heart.y = height + 20;
+          heart.x = Math.random() * width;
+        }
+
+        ctx.save();
+        ctx.translate(heart.x, heart.y);
+        ctx.fillStyle = `rgba(224, 169, 109, ${heart.opacity})`;
+        ctx.beginPath();
+        ctx.scale(heart.size / 15, heart.size / 15);
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(-5, -5, -10, 0, 0, 10);
+        ctx.bezierCurveTo(10, 0, 5, -5, 0, 0);
+        ctx.fill();
+        ctx.restore();
+      });
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  const scrollToNextSection = () => {
+    window.scrollTo({
+      top: window.innerHeight * 0.9,
+      behavior: 'smooth',
+    });
+  };
+
+  return (
+    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden bg-romantic-gradient">
+      {/* Canvas for stars and floating particles */}
+      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" />
+
+      {/* Ambient background glows */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-rose-600/15 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-10 left-1/3 w-[350px] h-[350px] bg-amber-500/10 rounded-full blur-[100px] pointer-events-none" />
+
+      {/* Main Content Box */}
+      <div className="relative z-10 max-w-4xl mx-auto space-y-8 px-4">
+        {/* Typewriter Recipient Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 border border-rose-500/30 backdrop-blur-md shadow-xl"
+        >
+          <Sparkles className="w-4 h-4 text-amber-400 animate-spin" style={{ animationDuration: '6s' }} />
+          <span className="font-handwritten text-2xl sm:text-3xl text-rose-200 tracking-wide">
+            {typedName}
+            <span className="animate-pulse">|</span>
+          </span>
+        </motion.div>
+
+        {/* Main Title */}
+        <motion.h1
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, delay: 0.3 }}
+          className="font-playfair text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-rose-100 via-amber-200 to-rose-300 drop-shadow-2xl leading-tight"
+        >
+          {headline}
+        </motion.h1>
+
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="text-base sm:text-xl text-rose-200/80 font-light max-w-2xl mx-auto leading-relaxed"
+        >
+          {subheadline}
+        </motion.p>
+
+        {/* Heart Icon */}
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', stiffness: 200, delay: 0.9 }}
+          className="pt-4 flex justify-center"
+        >
+          <div className="p-4 rounded-full bg-rose-500/10 border border-rose-500/30 backdrop-blur-lg shadow-2xl text-rose-400 hover:scale-110 transition-transform">
+            <Heart className="w-8 h-8 fill-rose-500/80 animate-pulse text-rose-400" />
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Downward Scroll Prompt */}
+      <motion.button
+        onClick={scrollToNextSection}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2 }}
+        className="absolute bottom-8 z-10 flex flex-col items-center gap-2 text-rose-300/70 hover:text-amber-200 transition-colors cursor-pointer"
+      >
+        <span className="text-xs uppercase tracking-widest font-medium">Scroll to explore our story</span>
+        <ChevronDown className="w-5 h-5 animate-bounce text-amber-400" />
+      </motion.button>
+    </section>
+  );
+}

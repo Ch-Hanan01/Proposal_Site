@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-playfair: 'Playfair Display', serif;
+  --font-great-vibes: 'Great Vibes', cursive;
+  --font-plus-jakarta: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+  background-color: #0d0414;
+  color: #f7e7ce;
+  font-family: var(--font-plus-jakarta);
+  overflow-x: hidden;
+  user-select: none; /* Prevents text highlighting for luxury protected feel */
+  -webkit-user-select: none;
+}
+
+/* Hide scrollbar for clean UI */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom shake animation for key errors */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.animate-shake {
+  animation: shake 0.3s ease-in-out;
+}
