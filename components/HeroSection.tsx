@@ -173,6 +173,18 @@ export default function HeroSection({ recipientName, headline, subheadline }: He
 
       {/* Main Content Box */}
       <div className="relative z-10 max-w-4xl mx-auto space-y-8 px-4">
+        {/* Top Panda on Bear Badge */}
+        <motion.div
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          className="flex justify-center"
+        >
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-rose-500/40 p-1 bg-black/40 shadow-2xl">
+            <img src="/images/panda on bear.webp" alt="Panda on Bear" className="w-full h-full object-contain" />
+          </div>
+        </motion.div>
+
         {/* Typewriter Recipient Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
