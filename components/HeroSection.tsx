@@ -163,16 +163,12 @@ export default function HeroSection({ recipientName, headline, subheadline }: He
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden bg-romantic-gradient">
-      {/* Canvas for stars and floating particles */}
-      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" />
+    <section className="relative flex flex-col items-center justify-center text-center px-4 overflow-hidden pt-8 pb-4">
+      {/* Canvas for twinkling stars */}
+      <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />
 
-      {/* Ambient background glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-rose-600/15 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-10 left-1/3 w-[350px] h-[350px] bg-amber-500/10 rounded-full blur-[100px] pointer-events-none" />
-
-      {/* Main Content Box */}
-      <div className="relative z-10 max-w-4xl mx-auto space-y-8 px-4">
+      {/* Main Content Box: Only Panda Badge & My Beloved Sarah Typewriter */}
+      <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center gap-3 px-4 text-center">
         {/* Top Panda on Bear Badge */}
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
@@ -198,51 +194,7 @@ export default function HeroSection({ recipientName, headline, subheadline }: He
             <span className="animate-pulse">|</span>
           </span>
         </motion.div>
-
-        {/* Main Title */}
-        <motion.h1
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="font-playfair text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-rose-100 via-amber-200 to-rose-300 drop-shadow-2xl leading-tight"
-        >
-          {headline}
-        </motion.h1>
-
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-base sm:text-xl text-rose-200/80 font-light max-w-2xl mx-auto leading-relaxed"
-        >
-          {subheadline}
-        </motion.p>
-
-        {/* Heart Icon */}
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200, delay: 0.9 }}
-          className="pt-4 flex justify-center"
-        >
-          <div className="p-4 rounded-full bg-rose-500/10 border border-rose-500/30 backdrop-blur-lg shadow-2xl text-rose-400 hover:scale-110 transition-transform">
-            <Heart className="w-8 h-8 fill-rose-500/80 animate-pulse text-rose-400" />
-          </div>
-        </motion.div>
       </div>
-
-      {/* Downward Scroll Prompt */}
-      <motion.button
-        onClick={scrollToNextSection}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2 }}
-        className="absolute bottom-8 z-10 flex flex-col items-center gap-2 text-rose-300/70 hover:text-amber-200 transition-colors cursor-pointer"
-      >
-        <span className="text-xs uppercase tracking-widest font-medium">Scroll to explore our story</span>
-        <ChevronDown className="w-5 h-5 animate-bounce text-amber-400" />
-      </motion.button>
     </section>
   );
 }
