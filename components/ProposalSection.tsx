@@ -58,28 +58,45 @@ export default function ProposalSection({ question, subtext, recipientName, prop
     '/images/sad.gif',
   ];
 
-  const handleNoHover = useCallback(() => {
+  const handleNoHover = useCallback((vectorX?: number, vectorY?: number) => {
     const now = Date.now();
-    // Throttle evasion to once every 200ms for fast responsive dodging without double text glitch!
-    if (now - lastEvadeTime.current < 200) return;
-    lastEvadeTime.current = now;
+    // Throttle text message updates so Roman Urdu text rotates at a pleasant pace (300ms)
+    if (now - lastEvadeTime.current > 300) {
+      lastEvadeTime.current = now;
+      setAttemptCount(prev => {
+        const nextCount = prev + 1;
+        const msg = romanUrduMessages[(nextCount - 1) % romanUrduMessages.length];
+        setNoTooltip(msg);
+        const sadGif = sadGifs[(nextCount - 1) % sadGifs.length];
+        setCurrentGif(sadGif);
+        return nextCount;
+      });
+    }
 
-    const side = Math.random() > 0.5 ? 1 : -1;
-    const randomX = side * (120 + Math.random() * 120);
-    const randomY = (Math.random() - 0.5) * 160;
-    setNoPos({ x: randomX, y: randomY });
+    setNoPos(prevPos => {
+      let jumpX = 0;
+      let jumpY = 0;
 
-    setAttemptCount(prev => {
-      const nextCount = prev + 1;
-      const msg = romanUrduMessages[(nextCount - 1) % romanUrduMessages.length];
-      setNoTooltip(msg);
-      const sadGif = sadGifs[(nextCount - 1) % sadGifs.length];
-      setCurrentGif(sadGif);
-      return nextCount;
+      if (vectorX !== undefined && vectorY !== undefined && (vectorX !== 0 || vectorY !== 0)) {
+        const len = Math.hypot(vectorX, vectorY) || 1;
+        // Directional Repulsion: Shoot away in the exact opposite direction from approaching cursor!
+        jumpX = prevPos.x + (vectorX / len) * 160;
+        jumpY = prevPos.y + (vectorY / len) * 130;
+      } else {
+        const side = Math.random() > 0.5 ? 1 : -1;
+        jumpX = side * (120 + Math.random() * 100);
+        jumpY = (Math.random() - 0.5) * 160;
+      }
+
+      // Clamp within container boundaries [-220, 220] on X and [-160, 160] on Y
+      const clampedX = Math.max(-220, Math.min(220, jumpX));
+      const clampedY = Math.max(-160, Math.min(160, jumpY));
+
+      return { x: clampedX, y: clampedY };
     });
   }, []);
 
-  // Precise Edge-Touch Proximity Detection: Evades as soon as cursor touches within 25px of button edge!
+  // Precise Directional Vector Proximity: Calculates vector away from cursor as soon as cursor comes within 110px!
   useEffect(() => {
     const handlePointerMove = (e: MouseEvent | TouchEvent) => {
       if (!noBtnRef.current) return;
@@ -87,12 +104,16 @@ export default function ProposalSection({ question, subtext, recipientName, prop
       const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
       const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
 
-      const dx = Math.max(rect.left - clientX, 0, clientX - rect.right);
-      const dy = Math.max(rect.top - clientY, 0, clientY - rect.bottom);
-      const distanceToEdge = Math.hypot(dx, dy);
+      const btnCenterX = rect.left + rect.width / 2;
+      const btnCenterY = rect.top + rect.height / 2;
 
-      if (distanceToEdge < 25) {
-        handleNoHover();
+      const dx = btnCenterX - clientX;
+      const dy = btnCenterY - clientY;
+      const distance = Math.hypot(dx, dy);
+
+      // Repel when cursor enters 110px radius around button center
+      if (distance < 110) {
+        handleNoHover(dx, dy);
       }
     };
 
@@ -168,7 +189,7 @@ export default function ProposalSection({ question, subtext, recipientName, prop
           <span className="inline-flex items-center text-2xl sm:text-5xl text-rose-300 font-sans leading-none drop-shadow-[0_4px_12px_rgba(255,112,166,0.8)]">🥺👉👈💖</span>
         </h2>
 
-        <p className="text-rose-200/90 text-sm sm:text-xl font-light max-w-2xl mx-auto leading-relaxed italic px-2">
+        <p className="text-amber-200/95 font-handwritten text-2xl sm:text-4xl max-w-3xl mx-auto leading-relaxed px-2 drop-shadow-lg pt-1">
           {subtext || `"Sachi sachi batao, kitna pyaar karti ho ${recipientName} mujhse?"`}
         </p>
 
@@ -189,11 +210,11 @@ export default function ProposalSection({ question, subtext, recipientName, prop
           <motion.button
             ref={noBtnRef}
             animate={{ x: noPos.x, y: noPos.y }}
-            transition={{ type: 'spring', stiffness: 500, damping: 24 }}
-            onMouseEnter={handleNoHover}
-            onPointerDown={handleNoHover}
-            onTouchStart={handleNoHover}
-            onClick={handleNoHover}
+            transition={{ type: 'spring', stiffness: 450, damping: 22 }}
+            onMouseEnter={() => handleNoHover()}
+            onPointerDown={() => handleNoHover()}
+            onTouchStart={() => handleNoHover()}
+            onClick={() => handleNoHover()}
             className="px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-rose-950/80 border-2 border-rose-400/60 text-rose-100 text-sm sm:text-base font-bold transition-all shadow-2xl cursor-pointer whitespace-nowrap z-40 touch-none"
           >
             {noTooltip}
