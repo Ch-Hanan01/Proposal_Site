@@ -51,21 +51,6 @@ export default function Home() {
         recipientName={settings.recipientName}
         proposerName={settings.proposerName}
       />
-
-      {/* Footer */}
-      <footer className="py-8 text-center text-xs text-rose-200/50 border-t border-rose-500/10 font-light space-y-2">
-        <p>Crafted with endless love • Forever Begins</p>
-        <p>
-          <a
-            href="/docs/TERMS_OF_USE.txt"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-amber-400/60 hover:text-amber-300 underline text-[10px] transition-colors"
-          >
-            Terms of Use & Font Licensing
-          </a>
-        </p>
-      </footer>
     </main>
   );
 }

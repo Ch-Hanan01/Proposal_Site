@@ -191,7 +191,6 @@ export default function HeroSection({ recipientName, headline, subheadline }: He
           <Sparkles className="w-4 h-4 text-amber-400 animate-spin" style={{ animationDuration: '6s' }} />
           <span className="font-handwritten text-2xl sm:text-3xl text-rose-200 tracking-wide">
             {typedName}
-            <span className="animate-pulse">|</span>
           </span>
         </motion.div>
       </div>

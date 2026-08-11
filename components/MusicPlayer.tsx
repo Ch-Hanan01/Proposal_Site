@@ -56,22 +56,14 @@ export default function MusicPlayer() {
       if (audio.paused) {
         audio.play().then(() => setIsPlaying(true)).catch(() => {});
       }
-      window.removeEventListener('click', handleFirstInteraction);
-      window.removeEventListener('touchstart', handleFirstInteraction);
-      window.removeEventListener('touchend', handleFirstInteraction);
-      window.removeEventListener('scroll', handleFirstInteraction);
+      events.forEach(event => window.removeEventListener(event, handleFirstInteraction));
     };
 
-    window.addEventListener('click', handleFirstInteraction);
-    window.addEventListener('touchstart', handleFirstInteraction);
-    window.addEventListener('touchend', handleFirstInteraction);
-    window.addEventListener('scroll', handleFirstInteraction);
+    const events = ['click', 'touchstart', 'touchend', 'scroll', 'mousemove', 'pointerdown', 'keydown'];
+    events.forEach(event => window.addEventListener(event, handleFirstInteraction, { passive: true }));
 
     return () => {
-      window.removeEventListener('click', handleFirstInteraction);
-      window.removeEventListener('touchstart', handleFirstInteraction);
-      window.removeEventListener('touchend', handleFirstInteraction);
-      window.removeEventListener('scroll', handleFirstInteraction);
+      events.forEach(event => window.removeEventListener(event, handleFirstInteraction));
     };
   }, [currentTrack]);
 
@@ -104,6 +96,7 @@ export default function MusicPlayer() {
       <audio
         ref={audioRef}
         src={encodeURI(track.src)}
+        autoPlay
         onEnded={handleEnded}
         preload="auto"
       />
