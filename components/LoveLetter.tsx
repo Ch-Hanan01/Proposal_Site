@@ -16,6 +16,9 @@ export default function LoveLetter({ letterText, recipientName, proposerName = '
 
   const handleOpen = () => {
     setIsOpen(true);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('play-track', { detail: 1 }));
+    }
     if (onOpenLetter) onOpenLetter();
   };
 

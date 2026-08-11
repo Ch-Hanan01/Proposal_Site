@@ -67,6 +67,21 @@ export default function MusicPlayer() {
     };
   }, [currentTrack]);
 
+  useEffect(() => {
+    const handlePlayTrackEvent = (e: any) => {
+      const idx = typeof e.detail === 'number' ? e.detail : 1;
+      setCurrentTrack(idx);
+      setIsPlaying(true);
+      if (audioRef.current) {
+        audioRef.current.src = encodeURI(PLAYLIST[idx].src);
+        audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+      }
+    };
+
+    window.addEventListener('play-track', handlePlayTrackEvent);
+    return () => window.removeEventListener('play-track', handlePlayTrackEvent);
+  }, []);
+
   const togglePlay = () => {
     const audio = audioRef.current;
     if (!audio) return;
