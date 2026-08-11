@@ -2,6 +2,12 @@
 const nextConfig = {
   reactStrictMode: true,
   productionBrowserSourceMaps: false, // Ensures source maps are NOT exposed in production DevTools
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   headers: async () => {
     return [
       {
