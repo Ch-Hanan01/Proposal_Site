@@ -58,10 +58,41 @@ export default function ProposalSection({ question, subtext, recipientName, prop
     '/images/sad.gif',
   ];
 
-  const handleNoHover = useCallback((vectorX?: number, vectorY?: number) => {
+  const handleNoHover = useCallback((mouseX?: number, mouseY?: number) => {
+    let newX = 0;
+    let newY = 0;
+    let valid = false;
+
+    // Pick random coordinates guaranteed to be at least 150px away from the mouse cursor!
+    for (let i = 0; i < 15; i++) {
+      const rx = (Math.random() - 0.5) * 440; // -220 to 220
+      const ry = (Math.random() - 0.5) * 280; // -140 to 140
+
+      if (mouseX !== undefined && mouseY !== undefined) {
+        const distToMouse = Math.hypot(rx - mouseX, ry - mouseY);
+        if (distToMouse > 150) {
+          newX = rx;
+          newY = ry;
+          valid = true;
+          break;
+        }
+      } else {
+        newX = rx;
+        newY = ry;
+        valid = true;
+        break;
+      }
+    }
+
+    if (!valid) {
+      newX = (Math.random() > 0.5 ? 1 : -1) * 170;
+      newY = (Math.random() > 0.5 ? 1 : -1) * 120;
+    }
+
+    setNoPos({ x: newX, y: newY });
+
     const now = Date.now();
-    // Throttle text message updates so Roman Urdu text rotates at a pleasant pace (300ms)
-    if (now - lastEvadeTime.current > 300) {
+    if (now - lastEvadeTime.current > 200) {
       lastEvadeTime.current = now;
       setAttemptCount(prev => {
         const nextCount = prev + 1;
@@ -72,31 +103,9 @@ export default function ProposalSection({ question, subtext, recipientName, prop
         return nextCount;
       });
     }
-
-    setNoPos(prevPos => {
-      let jumpX = 0;
-      let jumpY = 0;
-
-      if (vectorX !== undefined && vectorY !== undefined && (vectorX !== 0 || vectorY !== 0)) {
-        const len = Math.hypot(vectorX, vectorY) || 1;
-        // Directional Repulsion: Shoot away in the exact opposite direction from approaching cursor!
-        jumpX = prevPos.x + (vectorX / len) * 160;
-        jumpY = prevPos.y + (vectorY / len) * 130;
-      } else {
-        const side = Math.random() > 0.5 ? 1 : -1;
-        jumpX = side * (120 + Math.random() * 100);
-        jumpY = (Math.random() - 0.5) * 160;
-      }
-
-      // Clamp within container boundaries [-220, 220] on X and [-160, 160] on Y
-      const clampedX = Math.max(-220, Math.min(220, jumpX));
-      const clampedY = Math.max(-160, Math.min(160, jumpY));
-
-      return { x: clampedX, y: clampedY };
-    });
   }, []);
 
-  // Precise Directional Vector Proximity: Calculates vector away from cursor as soon as cursor comes within 110px!
+  // Precise Anti-Trapping Proximity: Evades as soon as cursor comes within 120px
   useEffect(() => {
     const handlePointerMove = (e: MouseEvent | TouchEvent) => {
       if (!noBtnRef.current) return;
@@ -107,13 +116,18 @@ export default function ProposalSection({ question, subtext, recipientName, prop
       const btnCenterX = rect.left + rect.width / 2;
       const btnCenterY = rect.top + rect.height / 2;
 
-      const dx = btnCenterX - clientX;
-      const dy = btnCenterY - clientY;
-      const distance = Math.hypot(dx, dy);
+      const distance = Math.hypot(clientX - btnCenterX, clientY - btnCenterY);
 
-      // Repel when cursor enters 110px radius around button center
-      if (distance < 110) {
-        handleNoHover(dx, dy);
+      if (distance < 120) {
+        const parent = noBtnRef.current.parentElement;
+        if (parent) {
+          const parentRect = parent.getBoundingClientRect();
+          const mouseRelX = clientX - (parentRect.left + parentRect.width / 2);
+          const mouseRelY = clientY - (parentRect.top + parentRect.height / 2);
+          handleNoHover(mouseRelX, mouseRelY);
+        } else {
+          handleNoHover();
+        }
       }
     };
 
